@@ -1,7 +1,8 @@
 console.log('Lets write JavaScript');
 let currentSong = new Audio();
-let songs;
+let songs = [];
 let currFolder;
+let currentTrack = "";
 
 let play = document.getElementById("playbutton");
 let previous = document.getElementById("previous");
@@ -71,6 +72,7 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause = false) => {
+    currentTrack = track;
     currentSong.src = `/${currFolder}/` + track
     if (!pause) {
         currentSong.play()
@@ -78,8 +80,6 @@ const playMusic = (track, pause = false) => {
     }
     document.querySelector(".songinfo").innerHTML = decodeURI(track)
     document.querySelector(".songtime").innerHTML = "00:00 / 00:00"
-
-
 }
 
 async function displayAlbums() {
@@ -184,8 +184,8 @@ async function main() {
     previous.addEventListener("click", () => {
         currentSong.pause()
         console.log("Previous clicked")
-        let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0])
-        if ((index - 1) >= 0) {
+        let index = songs.indexOf(currentTrack)
+        if (index > 0) {
             playMusic(songs[index - 1])
         }
     })
@@ -195,8 +195,8 @@ async function main() {
         currentSong.pause()
         console.log("Next clicked")
 
-        let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0])
-        if ((index + 1) < songs.length) {
+        let index = songs.indexOf(currentTrack)
+        if (index >= 0 && index < songs.length - 1) {
             playMusic(songs[index + 1])
         }
     })
